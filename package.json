@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "convex": "^1.17.0",
+    "fasthtml": "^0.1.0"
+  }
+}
