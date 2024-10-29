@@ -1,6 +1,14 @@
 {
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
   "dependencies": {
     "convex": "^1.17.0",
+    "express": "^4.21.1",
     "fasthtml": "^0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }
