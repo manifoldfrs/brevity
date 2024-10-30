@@ -1,2 +1,2 @@
-# brevity
+# Brevity
 LLM Content Summarizer
