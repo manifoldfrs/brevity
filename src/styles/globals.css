@@ -74,3 +74,41 @@ h1, h2, h3 {
   mix-blend-mode: multiply;
   filter: contrast(1.2);
 }
+
+.content-upload {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.content-input {
+  width: 100%;
+  min-height: 200px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
+}
+
+button {
+  background: linear-gradient(var(--gradient-1), var(--gradient-2));
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
