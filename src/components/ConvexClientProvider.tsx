@@ -1,7 +1,13 @@
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
+const convexUrl = import.meta.env.VITE_CONVEX_URL;
+
+if (!convexUrl) {
+  throw new Error("VITE_CONVEX_URL is not defined");
+}
+
+const convex = new ConvexReactClient(convexUrl);
 
 interface ConvexClientProviderProps {
   children: ReactNode;
