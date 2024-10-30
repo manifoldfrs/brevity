@@ -9,7 +9,7 @@ export const uploadContent = mutation({
     const contentId = await ctx.db.insert("contents", {
       text: args.content,
       createdAt: Date.now(),
-      summary: null
+      summary: "",
     });
     return contentId;
   },
