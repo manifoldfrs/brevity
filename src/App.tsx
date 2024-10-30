@@ -1,7 +1,6 @@
 import React from 'react';
 import { FloatingPanels } from './components/FloatingPanels';
 import { ContentUpload } from './components/ContentUpload';
-import { ConvexTest } from './components/ConvexTest';
 import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
@@ -21,7 +20,6 @@ export const App: React.FC = () => {
     <div className="discovery-container">
       <FloatingPanels />
       <ContentUpload onUpload={handleUpload} />
-      <ConvexTest />
     </div>
   );
 };
