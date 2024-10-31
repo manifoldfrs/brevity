@@ -1,5 +1,6 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import fetch from "node-fetch";
 
 // Enable Node.js environment
 export const summarizeContent = action({
@@ -10,13 +11,14 @@ export const summarizeContent = action({
   handler: async (ctx, args) => {
     "use node";
 
-    // Import your LLM client or use an API endpoint
-    const { generateSummary } = require("../backend/llm");
+    // Call the FastAPI endpoint
+    const response = await fetch("http://localhost:8000/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: args.content }),
+    });
 
-    // Generate the summary
-    const summary = await generateSummary(args.content);
-
-    // Return the summary
-    return summary;
+    const data = await response.json();
+    return data.summary;
   },
 });
