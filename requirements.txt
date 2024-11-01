@@ -1,6 +1,6 @@
 fastapi
 openai
-dotenv
+python-dotenv
 pydantic
 torch
 transformers
