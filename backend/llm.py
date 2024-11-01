@@ -18,8 +18,8 @@ def generate_summary(content: str) -> str:
     response = openai.ChatCompletion.create(
         model="meta-llama/Llama-2-70b-chat-hf",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=750,
-        temperature=0.25,
+        max_tokens=700,
+        temperature=0.20,
     )
 
     # Extract the summary
