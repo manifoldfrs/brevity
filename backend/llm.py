@@ -1,22 +1,27 @@
-import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import os
+import openai
+from dotenv import load_dotenv
 
 
+# TODO: Refactor to use Open Router
 def generate_summary(content: str) -> str:
-    """Summarize the provided content using Llama 3.1b."""
-    # Load the tokenizer and model
-    tokenizer = AutoTokenizer.from_pretrained("llama-3b")
-    model = AutoModelForSeq2SeqLM.from_pretrained("llama-3b")
+    """Summarize the provided content using OpenRouter and Llama models."""
+    # Load environment variables
+    load_dotenv()
+    openai.api_key = os.getenv("OPENROUTER_API_KEY")
+    openai.api_base = "https://openrouter.ai/api/v1"
 
-    # Tokenize the input content
-    inputs = tokenizer.encode(
-        content, return_tensors="pt", max_length=1024, truncation=True
+    # Prepare the prompt
+    prompt: str = f"Summarize the following content:\n\n{content}"
+
+    # Call OpenRouter API
+    response = openai.ChatCompletion.create(
+        model="meta-llama/Llama-2-70b-chat-hf",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=750,
+        temperature=0.25,
     )
 
-    # Generate the summary
-    summary_ids = model.generate(
-        inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4
-    )
-    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
+    # Extract the summary
+    summary: str = response["choices"][0]["message"]["content"].strip()
     return summary

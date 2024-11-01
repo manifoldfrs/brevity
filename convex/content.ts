@@ -14,8 +14,10 @@ export const uploadContent = mutation({
       summary: "",
     });
 
-    // Generate the summary by calling the action
-    const summary = await ctx.runAction(api.summarizeContent, { content: args.content });
+    // Generate the summary by calling the action immediately (0ms delay)
+    const summary = await ctx.scheduler.runAfter(0, api.summarize.summarizeContent, {
+      content: args.content
+    });
 
     // Update the content with the generated summary
     await ctx.db.patch(contentId, { summary });
