@@ -14,7 +14,11 @@ export const summarizeContent = action({
     try {
       const response = await fetch("http://localhost:8000/summarize", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Origin": "http://localhost:3000",
+          "Access-Control-Allow-Origin": "*"
+        },
         body: JSON.stringify({ content: args.content }),
       });
 

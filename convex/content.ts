@@ -20,6 +20,7 @@ export const uploadContent = mutation({
       const summary = await ctx.scheduler.runAfter(0, api.summarize.summarizeContent, {
         content: args.content
       });
+      console.log("Summary:", summary);
 
       // Update the content with the generated summary
       await ctx.db.patch(contentId, { summary });
