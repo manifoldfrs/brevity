@@ -1,11 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from .llm import generate_summary
+from backend.llm import generate_summary
 import logging
+import uvicorn
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 app = FastAPI()
 
@@ -18,6 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+logger.info("Server is starting....")
+
 
 class Content(BaseModel):
     content: str
@@ -26,10 +30,21 @@ class Content(BaseModel):
 @app.post("/summarize")
 async def summarize(content: Content):
     """Endpoint to summarize content."""
+    logger.debug(f"Received content: {content.content[:100]}...")  # Log first 100 chars
     try:
+        logger.info("Generating summary...")
         summary = generate_summary(content.content)
         logger.info(f"Generated summary: {summary}")
         return {"summary": summary}
     except Exception as e:
         logger.error(f"Error generating summary: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "backend.server:app",
+        host="0.0.0.0",
+        port=8000,
+        log_level="info",
+    )

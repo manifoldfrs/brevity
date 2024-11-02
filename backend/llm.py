@@ -1,6 +1,17 @@
 import os
 import openai
 from dotenv import load_dotenv
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Add a handler if logs aren't appearing
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+)
+logger.addHandler(handler)
 
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=dotenv_path)
@@ -44,7 +55,8 @@ def generate_summary(content: str) -> str:
         summary = response.choices[0].message.content.strip()
         if not summary:
             raise ValueError("Empty summary received")
+        logger.info(f"Generated summary: {summary}")
         return summary
     except (AttributeError, IndexError) as e:
-        print("Error parsing API response:", response)
+        logger.error("Error parsing API response: %s", response)
         raise ValueError(f"Failed to extract summary from response: {e}")
