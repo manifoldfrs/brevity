@@ -13,6 +13,11 @@ def generate_summary(content: str) -> str:
     openai.api_key = os.getenv("OPENROUTER_API_KEY")
     openai.api_base = "https://openrouter.ai/api/v1"
 
+    headers = {
+        "HTTP-Referer": "https://localhost:3000",  # Required for OpenRouter
+        "X-Title": "Brevity Content Summarizer",  # Optional, but good practice
+    }
+
     # Updated messages array with system and user prompts
     messages = [
         {
@@ -31,8 +36,15 @@ def generate_summary(content: str) -> str:
         messages=messages,
         max_tokens=750,
         temperature=0.25,
+        headers=headers,
     )
 
-    # Extract the summary
-    summary: str = response["choices"][0]["message"]["content"].strip()
-    return summary
+    # Extract and verify the summary
+    try:
+        summary = response.choices[0].message.content.strip()
+        if not summary:
+            raise ValueError("Empty summary received")
+        return summary
+    except (AttributeError, IndexError) as e:
+        print("Error parsing API response:", response)
+        raise ValueError(f"Failed to extract summary from response: {e}")

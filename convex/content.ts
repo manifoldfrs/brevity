@@ -1,6 +1,7 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
+import { query } from "./_generated/server";
 
 export const uploadContent = mutation({
   args: {
@@ -14,14 +15,33 @@ export const uploadContent = mutation({
       summary: "",
     });
 
-    // Generate the summary by calling the action immediately (0ms delay)
-    const summary = await ctx.scheduler.runAfter(0, api.summarize.summarizeContent, {
-      content: args.content
-    });
+    try {
+      // Generate the summary
+      const summary = await ctx.scheduler.runAfter(0, api.summarize.summarizeContent, {
+        content: args.content
+      });
 
-    // Update the content with the generated summary
-    await ctx.db.patch(contentId, { summary });
+      // Update the content with the generated summary
+      await ctx.db.patch(contentId, { summary });
+    } catch (error) {
+      console.error("Failed to generate summary:", error);
+      // Update with error message if summary generation fails
+      await ctx.db.patch(contentId, {
+        summary: "Failed to generate summary. Please try again."
+      });
+    }
 
     return contentId;
+  },
+});
+
+export const listContents = query({
+  args: {},
+  handler: async (ctx) => {
+    const contents = await ctx.db
+      .query("contents")
+      .order("desc")
+      .take(10);
+    return contents;
   },
 });
