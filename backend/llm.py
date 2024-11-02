@@ -2,8 +2,10 @@ import os
 import openai
 from dotenv import load_dotenv
 
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(dotenv_path=dotenv_path)
 
-# TODO: Refactor to use Open Router
+
 def generate_summary(content: str) -> str:
     """Summarize the provided content using OpenRouter and Llama models."""
     # Load environment variables
@@ -16,7 +18,7 @@ def generate_summary(content: str) -> str:
 
     # Call OpenRouter API
     response = openai.ChatCompletion.create(
-        model="meta-llama/Llama-2-70b-chat-hf",
+        model="meta-llama/llama-3.2-3b-instruct:free",
         messages=[{"role": "user", "content": prompt}],
         max_tokens=750,
         temperature=0.25,
