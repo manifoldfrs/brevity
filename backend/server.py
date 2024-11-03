@@ -14,13 +14,11 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your frontend URL
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Origin"],
 )
-
-logger.info("Server is starting....")
 
 
 class Content(BaseModel):
@@ -30,9 +28,8 @@ class Content(BaseModel):
 @app.post("/summarize")
 async def summarize(content: Content):
     """Endpoint to summarize content."""
-    logger.debug(f"Received content: {content.content[:100]}...")  # Log first 100 chars
+    logger.info(f"Received content: {content.content[:100]}...")  # Log first 100 chars
     try:
-        logger.info("Generating summary...")
         summary = generate_summary(content.content)
         logger.info(f"Generated summary: {summary}")
         return {"summary": summary}

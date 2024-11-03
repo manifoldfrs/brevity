@@ -1,5 +1,5 @@
 import os
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 import logging
 
@@ -16,18 +16,15 @@ logger.addHandler(handler)
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
+# gets API Key from environment variable OPENAI_API_KEY
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+)
+
 
 def generate_summary(content: str) -> str:
     """Summarize the provided content using OpenRouter and Llama models."""
-    # Load environment variables
-    load_dotenv()
-    openai.api_key = os.getenv("OPENROUTER_API_KEY")
-    openai.api_base = "https://openrouter.ai/api/v1"
-
-    headers = {
-        "HTTP-Referer": "https://localhost:3000",  # Required for OpenRouter
-        "X-Title": "Brevity Content Summarizer",  # Optional, but good practice
-    }
 
     # Updated messages array with system and user prompts
     messages = [
@@ -42,12 +39,15 @@ def generate_summary(content: str) -> str:
     ]
 
     # Call OpenRouter API with updated messages
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
+        # extra_headers={
+        #     "HTTP-Referer": "https://localhost:3000",  # Optional, for including your app on openrouter.ai rankings.
+        #     "X-Title": "Brevity Content Summarizer",  # Optional. Shows in rankings on openrouter.ai.
+        # },
         model="meta-llama/llama-3.2-3b-instruct:free",
         messages=messages,
         max_tokens=750,
         temperature=0.25,
-        headers=headers,
     )
 
     # Extract and verify the summary
