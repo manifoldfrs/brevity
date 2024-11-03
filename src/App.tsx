@@ -2,11 +2,11 @@ import React from 'react';
 import { FloatingPanels } from './components/FloatingPanels';
 import { ContentUpload } from './components/ContentUpload';
 import { ContentDisplay } from './components/ContentDisplay';
-import { useMutation } from "convex/react";
+import { useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 
 export const App: React.FC = () => {
-  const uploadContent = useMutation(api.content.uploadContent);
+  const uploadContent = useAction(api.content.uploadContent);
 
   const handleUpload = async (content: string) => {
     try {

@@ -7,13 +7,18 @@ interface ContentUploadProps {
 export const ContentUpload: React.FC<ContentUploadProps> = ({ onUpload }) => {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     try {
       await onUpload(content);
       setContent('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to summarize content');
+      console.error('Upload error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -30,6 +35,7 @@ export const ContentUpload: React.FC<ContentUploadProps> = ({ onUpload }) => {
       <button type="submit" disabled={isLoading || !content}>
         {isLoading ? 'Processing...' : 'Summarize'}
       </button>
+      {error && <p className="error-message">{error}</p>}
     </form>
   );
 };
