@@ -14,6 +14,8 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as content from "../content.js";
+import type * as contentMutations from "../contentMutations.js";
+import type * as contentQueries from "../contentQueries.js";
 import type * as summarize from "../summarize.js";
 
 /**
@@ -26,6 +28,8 @@ import type * as summarize from "../summarize.js";
  */
 declare const fullApi: ApiFromModules<{
   content: typeof content;
+  contentMutations: typeof contentMutations;
+  contentQueries: typeof contentQueries;
   summarize: typeof summarize;
 }>;
 export declare const api: FilterApi<

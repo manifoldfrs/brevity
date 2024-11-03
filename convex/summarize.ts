@@ -7,7 +7,6 @@ export const summarizeContent = action({
   args: {
     content: v.string(),
   },
-  // Use Node.js environment to interact with LLM libraries
   handler: async (_ctx, args) => {
     "use node";
 
@@ -17,7 +16,6 @@ export const summarizeContent = action({
         headers: {
           "Content-Type": "application/json",
           "Origin": "http://localhost:3000",
-          "Access-Control-Allow-Origin": "*"
         },
         body: JSON.stringify({ content: args.content }),
       });
@@ -36,8 +34,9 @@ export const summarizeContent = action({
       return data.summary;
     } catch (error: unknown) {
       console.error("Error in summarizeContent:", error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      return `Error generating summary: ${errorMessage}`;
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      throw new Error(`Error generating summary: ${errorMessage}`);
     }
   },
 });

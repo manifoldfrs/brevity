@@ -1,48 +1,39 @@
-import { mutation } from "./_generated/server";
+import { action, ActionCtx } from "./_generated/server";
 import { v } from "convex/values";
-import { api } from "./_generated/api";
-import { query } from "./_generated/server";
 
-export const uploadContent = mutation({
+export const uploadContent = action({
   args: {
     content: v.string(),
   },
-  handler: async (ctx, args) => {
-    // Insert the content into the database
-    const contentId = await ctx.db.insert("contents", {
-      text: args.content,
-      createdAt: Date.now(),
-      summary: "",
-    });
+  handler: async (ctx: ActionCtx, args: { content: string }) => {
+    "use node";
 
     try {
-      // Generate the summary
-      const summary = await ctx.scheduler.runAfter(0, api.summarize.summarizeContent, {
-        content: args.content
+      // Obtain FunctionReferences for the mutations and action
+      const insertContentRef = ctx.functions.get("contentMutations:insertContent");
+      const updateContentSummaryRef = ctx.functions.get("contentMutations:updateContentSummary");
+      const summarizeContentRef = ctx.functions.get("summarize:summarizeContent");
+
+      // Insert the content into the database
+      const contentId = await ctx.runMutation(insertContentRef, {
+        content: args.content,
       });
-      console.log("Summary:", summary);
+
+      // Generate the summary by calling the external API
+      const summary = await ctx.runAction(summarizeContentRef, {
+        content: args.content,
+      });
 
       // Update the content with the generated summary
-      await ctx.db.patch(contentId, { summary });
-    } catch (error) {
-      console.error("Failed to generate summary:", error);
-      // Update with error message if summary generation fails
-      await ctx.db.patch(contentId, {
-        summary: "Failed to generate summary. Please try again."
+      await ctx.runMutation(updateContentSummaryRef, {
+        contentId,
+        summary,
       });
+
+      return contentId;
+    } catch (error) {
+      console.error("Failed to upload content:", error);
+      throw new Error("Failed to upload content");
     }
-
-    return contentId;
-  },
-});
-
-export const listContents = query({
-  args: {},
-  handler: async (ctx) => {
-    const contents = await ctx.db
-      .query("contents")
-      .order("desc")
-      .take(10);
-    return contents;
   },
 });
