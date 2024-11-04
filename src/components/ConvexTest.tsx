@@ -3,7 +3,7 @@ import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 
 export const ConvexTest = () => {
-  const uploadContent = useMutation(api.content.uploadContent);
+  const uploadContent = useMutation(api.contentMutations.insertContent);
   const [isLoading, setIsLoading] = useState(false);
   const testMessage = "Test content " + new Date().toISOString();
 
