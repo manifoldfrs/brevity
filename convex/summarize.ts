@@ -11,11 +11,12 @@ export const summarizeContent = action({
     "use node";
 
     try {
-      const response = await fetch("http://localhost:8000/summarize", {
-        method: "POST",
-        headers: {
+      const response = await fetch(
+        "https://63c5-75-59-233-35.ngrok-free.app/summarize",
+        {
+          method: "POST",
+          headers: {
           "Content-Type": "application/json",
-          "Origin": "http://localhost:3000",
         },
         body: JSON.stringify({ content: args.content }),
       });
