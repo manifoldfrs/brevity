@@ -1,13 +1,14 @@
 import { query } from "./_generated/server";
-import { api } from "./_generated/api";
+import { Doc } from "./_generated/dataModel";
 
 export const listContents = query({
   args: {},
-  handler: async (ctx) => {
-    const contents = await ctx.db
+  handler: async (ctx): Promise<Doc<"contents"> | null> => {
+    const content = await ctx.db
       .query("contents")
       .order("desc")
-      .take(10);
-    return contents;
+      .first();
+
+    return content;
   },
 });

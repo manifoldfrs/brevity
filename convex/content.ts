@@ -1,39 +1,45 @@
-import { action, ActionCtx } from "./_generated/server";
+import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
+import { Doc } from "./_generated/dataModel";
 
 export const uploadContent = action({
   args: {
     content: v.string(),
   },
-  handler: async (ctx: ActionCtx, args: { content: string }) => {
+  handler: async (ctx, args): Promise<Doc<"contents"> | null> => {
     "use node";
 
     try {
-      // Obtain FunctionReferences for the mutations and action
-      const insertContentRef = ctx.functions.get("contentMutations:insertContent");
-      const updateContentSummaryRef = ctx.functions.get("contentMutations:updateContentSummary");
-      const summarizeContentRef = ctx.functions.get("summarize:summarizeContent");
-
       // Insert the content into the database
-      const contentId = await ctx.runMutation(insertContentRef, {
+      const contentId = await ctx.runMutation(api.contentMutations.insertContent, {
         content: args.content,
       });
 
       // Generate the summary by calling the external API
-      const summary = await ctx.runAction(summarizeContentRef, {
+      const summary = await ctx.runAction(api.summarize.summarizeContent, {
         content: args.content,
       });
 
       // Update the content with the generated summary
-      await ctx.runMutation(updateContentSummaryRef, {
+      await ctx.runMutation(api.contentMutations.updateContentSummary, {
         contentId,
         summary,
       });
 
-      return contentId;
+      // Optionally fetch the updated content using the query
+      const updatedContent: Doc<"contents">[] = await ctx.runQuery(
+        api.contentQueries.listContents,
+        {}
+      );
+
+      return updatedContent;
     } catch (error) {
       console.error("Failed to upload content:", error);
-      throw new Error("Failed to upload content");
+      if (error instanceof Error) {
+        throw new Error(`Failed to upload content: ${error.message}`);
+      }
+      throw new Error("Failed to upload content: Unknown error");
     }
   },
 });
