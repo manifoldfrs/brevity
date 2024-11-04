@@ -14,6 +14,7 @@ export const App: React.FC = () => {
       console.log('Content uploaded successfully');
     } catch (error) {
       console.error('Error uploading content:', error);
+      throw error;
     }
   };
 

@@ -28,7 +28,7 @@ export const uploadContent = action({
       });
 
       // Optionally fetch the updated content using the query
-      const updatedContent: Doc<"contents">[] = await ctx.runQuery(
+      const updatedContent = await ctx.runQuery(
         api.contentQueries.listContents,
         {}
       );
