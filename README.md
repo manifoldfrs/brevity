@@ -91,4 +91,3 @@ LLM Content Summarizer
    - Start the frontend as described above.
 2. **Use the Application**
    Open your browser and go to `http://localhost:3000` to start using Brevity.
-
