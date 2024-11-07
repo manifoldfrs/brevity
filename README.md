@@ -62,22 +62,27 @@ LLM Content Summarizer
 ### Convex
 
 1. **Install Convex CLI**
+
    ```bash
    npm install -g convex
    ```
 2. **Log In to Convex**
+
    ```bash
    convex login
    ```
 3. **Navigate to the Convex Directory**
+
    ```bash
    cd convex
    ```
 4. **Deploy the Schema**
+
    ```bash
    convex deploy
    ```
 5. **Start the Convex Dev Server**
+
    ```bash
    convex dev
    ```
@@ -89,5 +94,6 @@ LLM Content Summarizer
 1. **Start All Services**
    - Ensure the backend server and Convex dev server are running.
    - Start the frontend as described above.
+
 2. **Use the Application**
    Open your browser and go to `http://localhost:3000` to start using Brevity.
