@@ -9,14 +9,17 @@ LLM Content Summarizer
 ### Frontend
 
 1. **Navigate to the Frontend Directory**
+
    ```bash
    cd frontend
    ```
 2. **Install Dependencies**
+
    ```bash
    npm install
    ```
 3. **Start the Development Server**
+
    ```bash
    npm start
    ```
@@ -26,33 +29,40 @@ LLM Content Summarizer
 ### Backend
 
 1. **Navigate to the Backend Directory**
+
    ```bash
    cd backend
    ```
 2. **Create a Virtual Environment**
+
    ```bash
    python3 -m venv env
    ```
 3. **Activate the Virtual Environment**
    - **On macOS/Linux:**
+
      ```bash
      source env/bin/activate
      ```
    - **On Windows:**
+
      ```bash
      .\env\Scripts\activate
      ```
 4. **Install Dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 5. **Set Up Environment Variables**
+
    - Create a `.env` file in the `backend` directory.
    - Add your OpenRouter API key:
      ```
      OPENROUTER_API_KEY=your_api_key_here
      ```
 6. **Start the Backend Server**
+
    ```bash
    uvicorn server:app --reload
    ```
