@@ -150,3 +150,39 @@ button:disabled {
   color: white;
   line-height: 1.6;
 }
+
+.parallax-container {
+  perspective: 1px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.parallax-section {
+  position: relative;
+  min-height: 100vh;
+  transform-style: preserve-3d;
+  padding: 20vh 10%;
+}
+
+.parallax-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  transform: translateZ(-1px) scale(2);
+  z-index: -1;
+}
+
+/* Adjust background images for each section */
+.parallax-section:nth-child(1)::after {
+  background-image: url('/images/bg1.jpg');
+}
+
+.parallax-section:nth-child(2)::after {
+  background-image: url('/images/bg2.jpg');
+}
