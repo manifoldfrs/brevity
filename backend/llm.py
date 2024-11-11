@@ -38,12 +38,7 @@ def generate_summary(content: str) -> str:
         },
     ]
 
-    # Call OpenRouter API with updated messages
     response = client.chat.completions.create(
-        # extra_headers={
-        #     "HTTP-Referer": "https://localhost:3000",  # Optional, for including your app on openrouter.ai rankings.
-        #     "X-Title": "Brevity Content Summarizer",  # Optional. Shows in rankings on openrouter.ai.
-        # },
         model="meta-llama/llama-3.2-3b-instruct:free",
         messages=messages,
         max_tokens=750,
