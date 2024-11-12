@@ -1,20 +1,38 @@
 import React from 'react';
-import MindMap, { Node } from 'react-mindmap';
+import ReactFlow, {
+  Background,
+  Controls,
+  Edge,
+  MiniMap,
+  Node,
+  OnLoadParams,
+} from 'react-flow-renderer';
 
 interface SummaryMindMapProps {
-  nodes: Node[];
+  elements: (Node | Edge)[];
   onNodeClick: (nodeId: string) => void;
 }
 
-export const SummaryMindMap: React.FC<SummaryMindMapProps> = ({ nodes, onNodeClick }) => {
+export const SummaryMindMap: React.FC<SummaryMindMapProps> = ({ elements, onNodeClick }) => {
+  const onElementClick = (_: any, element: any) => {
+    if (element.id) {
+      onNodeClick(element.id);
+    }
+  };
+
   return (
-    <MindMap
-      nodes={nodes}
-      onNodeClick={onNodeClick}
-      options={{
-        autoExpand: true,
-        nodeProps: { style: { fill: '#4ECDC4' } },
-      }}
-    />
+    <div style={{ width: '100%', height: '500px' }}>
+      <ReactFlow
+        elements={elements}
+        onElementClick={onElementClick}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        zoomOnScroll={false}
+      >
+        <MiniMap />
+        <Controls />
+        <Background color="#AAA" gap={16} />
+      </ReactFlow>
+    </div>
   );
 };
