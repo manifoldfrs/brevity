@@ -1,9 +1,6 @@
 # Brevity
 LLM Content Summarizer
 
-# Brevity
-LLM Content Summarizer
-
 ## Local Setup
 
 ### Frontend
