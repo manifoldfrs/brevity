@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { SummaryMindMap } from './SummaryMindMap';
 import { KeyPointCarousel } from './KeyPointCarousel';
 import { Node, Edge } from 'react-flow-renderer';
+import { LoadingSpinner } from './LoadingSpinner';
 
 export const ContentDisplay: React.FC = () => {
   const contents = useQuery(api.contentQueries.listContents);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (contents !== undefined) {
+      setIsLoading(false);
+    }
+  }, [contents]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   if (!contents) return <div className="content-display">Loading...</div>;
 
