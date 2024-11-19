@@ -30,11 +30,16 @@ def generate_summary(content: str) -> str:
     messages = [
         {
             "role": "system",
-            "content": "You are a precise summarizer. Create clear, concise summaries that capture the main points while maintaining accuracy. Focus on key information and maintain the original meaning.",
+            "content": """You are a precise summarizer that:
+            1. Extracts key points in bullet form
+            2. Maintains original meaning and context
+            3. Removes redundant information
+4. Structures output with clear sections
+5. Preserves technical accuracy""",
         },
         {
             "role": "user",
-            "content": f"Please provide a concise summary of the following content:\n\n{content}",
+            "content": f"Summarize this content with key points and main takeaways:\n\n{content}",
         },
     ]
 

@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
 from pydantic import BaseModel
 from backend.llm import generate_summary
 import logging
@@ -9,7 +11,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+app.state.limiter = limiter
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,7 +29,8 @@ class Content(BaseModel):
 
 
 @app.post("/summarize")
-async def summarize(content: Content):
+@limiter.limit("5/minute")
+async def summarize(content: Content, request_ip=Depends(get_remote_address)):
     """Endpoint to summarize content."""
     logger.info(f"Received content: {content.content[:100]}...")  # Log first 100 chars
     try:
