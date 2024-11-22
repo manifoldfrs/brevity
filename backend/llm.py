@@ -43,20 +43,27 @@ def generate_summary(content: str) -> str:
         },
     ]
 
-    response = client.chat.completions.create(
-        model="meta-llama/llama-3.2-3b-instruct:free",
-        messages=messages,
-        max_tokens=750,
-        temperature=0.25,
-    )
+    # Implement retry mechanism
+    for attempt in range(3):
+        try:
+            response = client.chat.completions.create(
+                model="meta-llama/llama-3.2-3b-instruct:free",
+                messages=messages,
+                max_tokens=750,
+                temperature=0.25,
+            )
 
-    # Extract and verify the summary
-    try:
-        summary = response.choices[0].message.content.strip()
-        if not summary:
-            raise ValueError("Empty summary received")
-        logger.info(f"Generated summary: {summary}")
-        return summary
-    except (AttributeError, IndexError) as e:
-        logger.error("Error parsing API response: %s", response)
-        raise ValueError(f"Failed to extract summary from response: {e}")
+            # Extract and verify the summary
+            try:
+                summary = response.choices[0].message.content.strip()
+                if not summary:
+                    raise ValueError("Empty summary received")
+                logger.info(f"Generated summary: {summary}")
+                return summary
+            except (AttributeError, IndexError) as e:
+                logger.error("Error parsing API response: %s", response)
+                raise ValueError(f"Failed to extract summary from response: {e}")
+        except Exception as e:
+            logger.error(f"Attempt {attempt + 1} failed: {e}")
+            if attempt == 2:
+                raise
