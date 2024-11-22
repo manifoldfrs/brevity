@@ -169,3 +169,16 @@ button:disabled {
   position: relative;
   z-index: 10;
 }
+
+.content-upload button {
+  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+  transition: transform 0.2s ease-in-out;
+}
+
+.content-upload button:hover {
+  transform: scale(1.05);
+}
+
+.summary-mindmap {
+  filter: drop-shadow(0 0 10px var(--gradient-1));
+}
