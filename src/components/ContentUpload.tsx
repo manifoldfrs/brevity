@@ -9,10 +9,19 @@ interface ErrorState {
   type: 'error' | 'warning';
 }
 
+interface UploadProgress {
+  stage: 'uploading' | 'processing' | 'summarizing';
+  percent: number;
+}
+
 export const ContentUpload: React.FC<ContentUploadProps> = ({ onUpload }) => {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorState | null>(null);
+  const [progress, setProgress] = useState<UploadProgress>({
+    stage: 'uploading',
+    percent: 0
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +54,12 @@ export const ContentUpload: React.FC<ContentUploadProps> = ({ onUpload }) => {
         {isLoading ? 'Processing...' : 'Summarize'}
       </button>
       {error && <p className={`error-message ${error.type}`}>{error.message}</p>}
+      {isLoading && (
+        <ProgressBar
+          stage={progress.stage}
+          percent={progress.percent}
+        />
+      )}
     </form>
   );
 };
