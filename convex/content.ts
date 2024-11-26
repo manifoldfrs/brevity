@@ -35,11 +35,14 @@ export const uploadContent = action({
 
       return updatedContent;
     } catch (error) {
-      console.error("Failed to upload content:", error);
-      if (error instanceof Error) {
-        throw new Error(`Failed to upload content: ${error.message}`);
+      if (error instanceof NetworkError) {
+        throw new Error('Connection failed. Please check your internet connection.');
+      } else if (error instanceof RateLimitError) {
+        throw new Error('Too many requests. Please try again in a few minutes.');
+      } else if (error instanceof ValidationError) {
+        throw new Error('Invalid content format. Please check your input.');
       }
-      throw new Error("Failed to upload content: Unknown error");
+      throw new Error(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   },
 });
