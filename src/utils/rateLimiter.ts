@@ -1,4 +1,4 @@
-class RateLimiter {
+export class RateLimiter {
   private requests: number[] = [];
   private windowMs: number;
   private maxRequests: number;
