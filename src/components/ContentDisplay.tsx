@@ -9,7 +9,7 @@ import { LoadingSpinner } from './LoadingSpinner';
 export const ContentDisplay: React.FC = () => {
   const contents = useQuery(api.contentQueries.listContents);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     if (contents !== undefined) {
@@ -17,11 +17,17 @@ export const ContentDisplay: React.FC = () => {
     }
   }, [contents]);
 
+  if (error) {
+    return <div className="error-state">Error: {error.message}</div>;
+  }
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!contents) return <div className="content-display">Loading...</div>;
+  if (!contents?.length) {
+    return <div className="empty-state">No content available</div>;
+  }
 
   const elements = parseSummaryToElements(contents.summary);
 
